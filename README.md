@@ -28,7 +28,9 @@ git clone https://github.com/lluppesms/my.copilot.skills.git
 
 ### 2. Open as a multi-root workspace in VS Code
 
-Create a `.code-workspace` file (or use **File → Add Folder to Workspace…**) that includes both folders:
+Open this folder alongside your application using the **File → Add Folder to Workspace…** menu option.  Once both folders are added, use the command **Workspaces: Save Workspace As…** command to save a `.code-workspace` file that includes both folders.
+
+Or - you can manually create a `<repo-name>.code-workspace` file (or use **File → Add Folder to Workspace…**) that includes both folders:
 
 ```json
 {
@@ -39,7 +41,7 @@ Create a `.code-workspace` file (or use **File → Add Folder to Workspace…**)
 }
 ```
 
-Once both folders are open in the same VS Code window, GitHub Copilot automatically discovers agents, skills, instructions, and prompts from **all** workspace folders.
+Once both folders are open in the same VS Code workspace, GitHub Copilot automatically discovers agents, skills, instructions, and prompts from **all** workspace folders.
 
 > [!TIP]
 > Save the `.code-workspace` file inside your application repo (e.g. `MyApp.code-workspace`) and commit it so teammates can open the same setup with a single double-click.
