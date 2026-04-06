@@ -26,6 +26,8 @@ git clone https://github.com/<your-org>/<your-app-repo>.git
 git clone https://github.com/<your-org>/my.copilot.skills.git
 ```
 
+---
+
 ### 2. Open as a multi-root workspace in VS Code
 
 Open this folder alongside your application in VS Code using the **File → Add Folder to Workspace…** menu option.  Once both folders are added, use the command **Workspaces: Save Workspace As…** to save a `<repo-name>.code-workspace` file that includes both folders.
@@ -45,6 +47,73 @@ Once both folders are open in the same VS Code workspace, GitHub Copilot automat
 
 > [!TIP]
 > Save the `<repo-name>.code-workspace` file inside your application repo (e.g. `MyApp.code-workspace`) and commit it so teammates can open the same setup with a single double-click.
+
+---
+
+### 3. Using these Skills with GitHub Copilot CLI
+
+The CLI operates from a single working directory and does not read VS Code workspace files. Each type of Copilot customization has its own mechanism for loading from an external repo:
+
+| Content | CLI Method |
+|---------|-----------|
+| **Skills** | `/skills add <path>` |
+| **Agents** | Not really supported...* |
+| **Instructions** | Not really supported...** |
+| **Prompts** | Not supported in CLI |
+
+#### Skills
+
+Use the `/skills add` command to load the shared team skills:
+
+```shell
+/skills add /path/to/my.copilot.skills/.github/skills
+```
+
+Other useful `/skills` commands in the CLI:
+
+| Command | Purpose |
+|---------|---------|
+| `/skills list` | See all currently available skills |
+| `/skills add` | Add an external skills directory |
+| `/skills info` | View details about a skill and its location |
+| `/skills reload` | Pick up newly added skills without restarting |
+| `/skills` | Interactively toggle skills on or off |
+| `/skills remove DIR` | Remove a manually-added skills directory |
+
+> [!TIP]
+> Skills placed in `~/.copilot/skills/` are loaded as **personal skills** across all projects. Skills in a repo's `.github/skills/` directory are **project-specific**.
+
+#### Agents *
+
+The CLI discovers agents from fixed locations — there is no `/agent add` command.  If you don't have any Agents in your repo, you **could** load shared agents by creating a symlink to an agents directory in your team repository:
+
+```bash
+# Windows
+mklink /D "%USERPROFILE%\.copilot\agents" "/path/to/my.copilot.skills/.github/agents"
+
+# macOS / Linux
+ln -s /path/to/my.copilot.skills/.github/agents ~/.copilot/agents
+```
+
+> [!NOTE]
+> If you already have a `~/.copilot/agents/` folder, you'll need to merge the contents rather than symlink the entire directory.
+
+#### Instructions **
+
+You can't really point to both instructions, but you can set the `COPILOT_CUSTOM_INSTRUCTIONS_DIRS` environment variable to point to a set of shared instructions.
+
+```bash
+# PowerShell (current session)
+$env:COPILOT_CUSTOM_INSTRUCTIONS_DIRS = "/path/to/my.copilot.skills/.github/instructions"
+
+# PowerShell (permanent, user-level)
+[Environment]::SetEnvironmentVariable("COPILOT_CUSTOM_INSTRUCTIONS_DIRS", "/path/to/my.copilot.skills/.github/instructions", "User")
+
+# Bash / Zsh (add to ~/.bashrc or ~/.zshrc)
+export COPILOT_CUSTOM_INSTRUCTIONS_DIRS="/path/to/my.copilot.skills/.github/instructions"
+```
+
+Use `/instructions` in the CLI to view and toggle loaded instruction files.
 
 ---
 
